@@ -38,6 +38,24 @@ boot() {
 		$APP_FILE echolog "执行启动延时 $delay 秒后再启动!"
 		sleep $delay
 	fi
+	local current_pwd=$(pwd)
+	mkdir -p /tmp/etc/passwall2/share/v2ray
+	cd /tmp/etc/passwall2/share/v2ray
+	mkdir -p geoip geosite
+	opkg update >/dev/null
+	cd geoip && opkg download v2ray-geoip >/dev/null && cd ..
+	cd geosite && opkg download v2ray-geosite >/dev/null && cd ..
+	tar -xvzf geoip/*.ipk -C geoip >/dev/null
+	tar -xvzf geoip/data.tar.gz -C geoip >/dev/null
+	mv geoip/usr/share/v2ray/geoip.dat geoip.dat
+	tar -xvzf geosite/*.ipk -C geosite >/dev/null
+	tar -xvzf geosite/data.tar.gz -C geosite >/dev/null
+	mv geosite/usr/share/v2ray/geosite.dat geosite.dat
+	rm -rf geoip geosite
+	cd "$current_pwd"
+	restart
+	wget https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/refs/heads/release/geoip.dat -qO /tmp/etc/passwall2/share/v2ray/geoip.dat
+	wget https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/refs/heads/release/geosite.dat -qO /tmp/etc/passwall2/share/v2ray/geosite.dat
 	restart
 	touch ${LOCK_FILE_DIR}/${CONFIG}_ready.lock
 }
