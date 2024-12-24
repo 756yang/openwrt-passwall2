@@ -9,7 +9,7 @@ s = m:section(TypedSection, "global_rules", translate("Rule status"))
 s.anonymous = true
 
 o = s:option(Value, "v2ray_location_asset", translate("Location of V2ray/Xray asset"), translate("This variable specifies a directory where geoip.dat and geosite.dat files are."))
-o.default = "/tmp/etc/passwall2/share/v2ray/"
+o.default = "/tmp/share/v2ray/"
 o.rmempty = false
 
 ---- Custom geo file url
